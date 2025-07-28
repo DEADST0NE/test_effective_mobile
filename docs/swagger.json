@@ -1,0 +1,456 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "API for managing user subscriptions",
+        "title": "Subscription Service API",
+        "contact": {
+            "name": "API Support",
+            "email": "support@example.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:4000",
+    "basePath": "/api",
+    "paths": {
+        "/subscriptions": {
+            "get": {
+                "description": "Returns a list of subscriptions with optional filtering",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "List subscriptions",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by user ID",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit the number of results",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset for pagination",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/subscriptions.ResSubscription"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new service subscription",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Create a new subscription",
+                "parameters": [
+                    {
+                        "description": "Subscription data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.CreateSubscription"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ResSubscription"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/subscriptions/summary": {
+            "get": {
+                "description": "Calculate total cost of subscriptions for selected period with optional filters",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Get subscription summary",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "End of the period (MM-YYYY format)",
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 100,
+                        "minLength": 2,
+                        "type": "string",
+                        "description": "Service name to filter by",
+                        "name": "service_name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start of the period (MM-YYYY format)",
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID to filter by",
+                        "name": "user_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.SubscriptionSummaryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/subscriptions/{id}": {
+            "get": {
+                "description": "Returns a single subscription by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Get subscription by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Subscription ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ResSubscription"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates an existing subscription",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Update subscription",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Subscription ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Subscription update data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.UpdateSubscription"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ResSubscription"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes a subscription by ID",
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Delete subscription",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Subscription ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "subscriptions.CreateSubscription": {
+            "type": "object",
+            "required": [
+                "end_date",
+                "price",
+                "service_name",
+                "start_date",
+                "user_id"
+            ],
+            "properties": {
+                "end_date": {
+                    "description": "Date when the subscription end (MM-YYYY format)\nrequired: true\nexample: \"12-2025\"",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "Monthly subscription cost in RUB\nrequired: true\nexample: 599.99\nminimum: 0",
+                    "type": "number"
+                },
+                "service_name": {
+                    "description": "Name of the service being subscribed to\nrequired: true\nexample: Netflix\nmin length: 2\nmax length: 100",
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 2
+                },
+                "start_date": {
+                    "description": "Date when the subscription start (MM-YYYY format)\nrequired: true\nexample: \"07-2025\"",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "Unique identifier of the user who owns the subscription\nrequired: true\nexample: 4093b3c9-5a25-42d9-8b98-13bba54c9e61\nformat: uuid",
+                    "type": "string"
+                }
+            }
+        },
+        "subscriptions.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "description": "Optional list of detailed errors\nexample: [\"invalid user ID format\", \"price must be positive\"]",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "message": {
+                    "description": "Error message\nexample: invalid request payload",
+                    "type": "string"
+                },
+                "status_code": {
+                    "description": "HTTP status code\nexample: 400",
+                    "type": "integer"
+                }
+            }
+        },
+        "subscriptions.ResSubscription": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "description": "Optional subscription end date (MM-YYYY format)\nexample: \"12-2025\"",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Unique identifier of the subscription\nexample: b2c3d4e5-6789-01fg-hijk-lmnopqrstuvw\nformat: uuid",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "Monthly subscription cost in RUB\nexample: 599.99",
+                    "type": "number"
+                },
+                "service_name": {
+                    "description": "Name of the subscribed service\nexample: Netflix",
+                    "type": "string"
+                },
+                "start_date": {
+                    "description": "Subscription start date (MM-YYYY format)\nexample: \"07-2025\"",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "Unique identifier of the user\nexample: a1b2c3d4-5678-90ef-ghij-klmnopqrstuv\nformat: uuid",
+                    "type": "string"
+                }
+            }
+        },
+        "subscriptions.SubscriptionSummaryResponse": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "description": "Number of subscriptions matched\nexample: 6",
+                    "type": "integer"
+                },
+                "end_date": {
+                    "description": "Period end (MM-YYYY format)\nexample: \"12-2025\"",
+                    "type": "string"
+                },
+                "start_date": {
+                    "description": "Period start (MM-YYYY format)\nexample: \"07-2025\"",
+                    "type": "string"
+                },
+                "total_price": {
+                    "description": "Total cost for the period\nexample: 3599.94",
+                    "type": "number"
+                }
+            }
+        },
+        "subscriptions.UpdateSubscription": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "description": "New end date (MM-YYYY format)\nexample: \"12-2025\"",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "New monthly cost\nexample: 799.99",
+                    "type": "number"
+                },
+                "service_name": {
+                    "description": "New service name\nexample: Netflix Premium",
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 2
+                },
+                "start_date": {
+                    "description": "New start date (MM-YYYY format)\nexample: \"07-2025\"",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

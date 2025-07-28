@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  ### GO APP #########################################
+  app:
+    container_name: app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./go:/app
+    ports:
+      - "4000:4000"
+    privileged: true
+  ### PG ##############################################
+  pg:
+    container_name: pg
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${APP_DB_NAME:-postgres}
+      POSTGRES_USER: ${APP_DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD:-postgres}
+    volumes:
+      - ./docker-data/pg:/var/lib/postgresql/data
+    ports:
+      - ${APP_DB_PORT:-5432}:5432
